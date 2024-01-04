@@ -4,21 +4,21 @@ resource "aws_lb" "main" {
   load_balancer_type = var.lb_type
   security_groups    = [aws_security_group.main.id]
   subnets            = var.subnets
-  tags               = merge(local.tags { name = "${var.env}-alb" })
+  tags               = merge(local.tags { Name = "${var.env}-alb" })
 
 }
 resource "aws_security_group" "main" {
-  name        = "${var.env}-alb-sg"
-  description = "${var.env}-alb-sg"
+  name        = local.sg_name
+  description = local.sg_name
   vpc_id      = var.vpc_id
-  tags = merge(local.tags {name = "${var.env}-alb-sg"})
+  tags        = merge(local.tags { Name = local.sg_name })
 
   ingress {
-    description      = "APP"
-    from_port        = var.sg_port
-    to_port          = var.sg_port
-    protocol         = "tcp"
-    cidr_blocks      = var.sg_ingress_cidr
+    description = "APP"
+    from_port   = var.sg_port
+    to_port     = var.sg_port
+    protocol    = "tcp"
+    cidr_blocks = var.sg_ingress_cidr
 
   }
 
@@ -30,7 +30,4 @@ resource "aws_security_group" "main" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = {
-    Name = "allow_tls"
-  }
 }
